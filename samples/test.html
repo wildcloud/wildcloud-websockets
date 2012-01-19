@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Web Socket Test</title>
+    <script src="http://cdn.sockjs.org/sockjs-0.2.min.js"></script>
+    <link rel="stylesheet" href="http://localhost:4000/authorize/app/client">
+    <script>
+        var sock = new SockJS('http://localhost:4000/appclient', null, {debug:true, devel:true});
+        sock.onopen = function () {
+            console.log('open');
+        };
+        sock.onmessage = function (e) {
+            console.log('message', e.data);
+        };
+        sock.onclose = function () {
+            console.log('close');
+        };
+    </script>
+</head>
+<body>
+<form onsubmit="return false;" action="#">
+    <label>
+        <input type="text" name="message" value="Hello, World!"/>
+    </label>
+    <input type="button" value="Send Web Socket Data" onclick="sock.send(this.form.message.value)"/>
+    <input type="button" value="Close Socket" onclick="sock.close()"/>
+</form>
+</body>
+</html>
