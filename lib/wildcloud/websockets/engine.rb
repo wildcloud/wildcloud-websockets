@@ -66,7 +66,7 @@ module Wildcloud
       end
 
       def publish(socket_id, message)
-        @sockets[socket_id][:sockets].each { |socket| socket.publish(message) }
+        @sockets[socket_id][:sockets].each { |socket| socket.call(message) }
       end
 
       def on_message(socket_id, message)
