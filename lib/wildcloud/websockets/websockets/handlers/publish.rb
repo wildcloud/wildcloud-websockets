@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-#
 # Copyright 2011 Marek Jelen
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'rubygems'
+module Wildcloud
+  module Websockets
+    module Websockets
+      module Handlers
+        module Publish
 
-$: << File.expand_path('../../lib', __FILE__)
+          def handle_publish(socket_id)
+            response_set_content('OK', true)
+            response_send_header(true)
+            Engine.instance.publish(socket_id, request_body)
+          end
 
-require 'java'
-
-require File.expand_path('../../ext/netty', __FILE__)
-
-require 'wildcloud/websockets/websockets/server'
-
-@server = Wildcloud::Websockets::Websockets::Server.new
-@server.start
+        end
+      end
+    end
+  end
+end

@@ -25,52 +25,80 @@ module Wildcloud
 
       def initialize
         @sockets = {}
+        @deliveries = {}
         @queue = Queue.new
         @thread = Thread.new do
           loop do
             begin
               url, data = @queue.pop
-              puts "#{data} to #{url}"
               url = URI.parse(url)
               http = Net::HTTP.new(url.host, url.port)
               post = Net::HTTP::Post.new(url.path)
               post.body = data
               post['Content-Type'] = 'text/plain'
               response = http.request(post)
-              puts "Response #{response.code} (#{response.body})"
             rescue Exception => e
               puts e
             end
           end
         end
+        # TODO: remove?
+        authorize('echo', '')
+        authorize('close', '')
+        authorize('disabled_websocket_echo', '')
       end
 
       def authorize(app_id, user_id)
         socket_id = "#{app_id}#{user_id}"
-        @sockets[socket_id] = {:socket_id => socket_id, :app_id => app_id, :user_id => user_id, :sockets => [], :callback => 'http://localhost:4000/publish/appclient'}
+        @sockets[socket_id] = {:socket_id => socket_id, :app_id => app_id, :user_id => user_id, :sockets => {}, :callback => 'http://localhost:4000/publish/appclient'}
         socket_id
       end
 
-      def validate(socket_id)
-        @sockets.key?(socket_id)
+      def validate(socket_id, session_id = nil)
+        if session_id
+          @sockets.key?(socket_id) && @sockets[socket_id][:sockets].key?(session_id)
+        else
+          @sockets.key?(socket_id)
+        end
+
       end
 
-      def add_socket(socket_id, socket)
+      def add_socket(socket_id, session_id, socket)
+        return socket.close('Go away!') if socket_id == 'close' # TODO: remove?
+
         return nil unless @sockets.key?(socket_id)
-        @sockets[socket_id][:sockets] << socket
+
+        return socket.close('Another connection still open', 2010) if @sockets[socket_id][:sockets].key?(session_id)
+
+        @sockets[socket_id][:sockets][session_id] = socket
+
+        message, @deliveries[socket_id] = @deliveries[socket_id], []
+        publish(socket_id, message)
       end
 
-      def remove_socket(socket_id, socket)
+      def remove_socket(socket_id, session_id, socket)
         return nil unless @sockets.key?(socket_id)
-        @sockets[socket_id][:sockets].delete(socket)
+        @sockets[socket_id][:sockets].delete(session_id)
       end
 
       def publish(socket_id, message)
-        @sockets[socket_id][:sockets].each { |socket| socket.call(message) }
+        if @sockets[socket_id] && @sockets[socket_id][:sockets].size > 0
+          @sockets[socket_id][:sockets].each { |id, socket| socket.call(message) }
+        else
+          (@deliveries[socket_id] ||= []) << message
+        end
       end
 
       def on_message(socket_id, message)
-        @queue << [@sockets[socket_id][:callback], message]
+        # TODO: remove?
+        case socket_id
+          when 'echo'
+            publish('echo', message)
+          when 'disabled_websocket_echo'
+            publish('disabled_websocket_echo', message)
+          else
+            @queue << [@sockets[socket_id][:callback], message]
+        end
       end
 
     end

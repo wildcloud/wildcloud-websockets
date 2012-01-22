@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-#
 # Copyright 2011 Marek Jelen
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'rubygems'
+module Wildcloud
+  module Websockets
+    module Websockets
+      module Handlers
+        module Index
 
-$: << File.expand_path('../../lib', __FILE__)
+          def handle_index
+            @response.set_header('Content-Type', 'text/plain; charset=UTF-8')
+            @response.remove_header('Set-Cookie')
+            response_set_content("Welcome to SockJS!\n", true)
+            response_send_header(true)
+          end
 
-require 'java'
-
-require File.expand_path('../../ext/netty', __FILE__)
-
-require 'wildcloud/websockets/websockets/server'
-
-@server = Wildcloud::Websockets::Websockets::Server.new
-@server.start
+        end
+      end
+    end
+  end
+end
