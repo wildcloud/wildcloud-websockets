@@ -58,7 +58,7 @@ module Wildcloud
           @response_content_length = 0
           @response = DefaultHttpResponse.new(HttpVersion::HTTP_1_1, HttpResponseStatus::OK)
           @response.set_header('Access-Control-Allow-Credentials', 'true')
-          @response.set_header('Access-Control-Allow-Origin', '*')
+          @response.set_header('Access-Control-Allow-Origin', 'http://localhost')
           @response.set_header('Connection', 'keep-alive')
           @response.set_header('Content-Type', 'application/json; charset=UTF-8')
           cookie = request_header('Cookie')

@@ -1,1 +1,2 @@
-Netty 3.3.0.Final
+Netty - 3.3.0.Final
+Jackson - asl-1.9.4

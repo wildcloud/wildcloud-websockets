@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require 'java'
+
+require File.expand_path('../../../../../ext/netty', __FILE__)
+require File.expand_path('../../../../../ext/jackson-core', __FILE__)
+require File.expand_path('../../../../../ext/jackson-mapper', __FILE__)
+
 module Wildcloud
   module Websockets
     module Websockets
