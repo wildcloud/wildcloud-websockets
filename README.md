@@ -6,7 +6,7 @@ Service providing websockets to applications deployed in Wildcloud platform
 
 Proof of concept implementation.
 
-The service does not *yet* implement the interface as described below.
+The service does not **yet** implement the interface as described below.
 
 ## Client interface
 
@@ -46,6 +46,45 @@ with JSON encoded body containing the message and optional parameters.
     {"message": "some message"}
 
 The service then forwards the message to the client (all sessions or just a specific one).
+
+## Support
+
+* Transports
+    * Websockets
+    * XHR-Streaming
+    * Iframe-EventSource
+    * Iframe-Htmlfile
+    * XHR-Polling
+    * Iframe-XHR-Polling
+* Browsers
+    * MacOSX
+        * Chromium - OK
+        * Firefox - broken on XHR polling
+        * Opera - broken
+        * Safari - not tested
+        * Camino
+    * Linux - not tested
+        * Chromium
+        * Firefox
+        * Opera
+        * Epiphany
+        * Konqueror
+    * Windows - not tested
+        * Chromium
+        * Firefox
+        * Opera
+        * Safari
+        * Internet explorer
+    * Solaris - not tested
+    * BSDs - not tested
+    * Android - not tested
+        * Android browser
+        * Firefox
+        * Opera
+    * iOS - not tested
+        * Safari
+    * WP7 - not tested
+        * Internet explorer mobile
 
 ## License
 
