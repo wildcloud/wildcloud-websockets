@@ -47,6 +47,10 @@ with JSON encoded body containing the message and optional parameters.
 
 The service then forwards the message to the client (all sessions or just a specific one).
 
+On the client-side the user connects using SockJS to the server and specifies the already authorized socket_id
+
+    var socket = new SockJS('http://ws.your_server.com/socket_id');
+
 ## Support
 
 * Transports
