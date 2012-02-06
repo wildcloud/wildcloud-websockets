@@ -14,11 +14,10 @@
 
 module Wildcloud
   module Websockets
-    module Websockets
-      module Handlers
-        module Iframe
+    module Handler
+      class Iframe < BaseHandler
 
-          IFRAME_HTML = <<HTML
+        IFRAME_HTML = <<HTML
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,21 +36,20 @@ module Wildcloud
 </html>
 HTML
 
-          def handle_iframe(socket_id)
-            if request_header('If-None-Match')
-              response_status_not_modified
-              response_cache
-              @response.remove_header('Content-Type')
-            else
-              @response.set_header('Content-Type', 'text/html; charset=UTF-8')
-              @response.remove_header('Set-Cookie')
-              response_cache
-              response_set_content(IFRAME_HTML, true)
-            end
-            response_send_header(true)
+        def handle_iframe(socket_id)
+          if request_header('If-None-Match')
+            response_status_not_modified
+            response_cache
+            @response.remove_header('Content-Type')
+          else
+            @response.set_header('Content-Type', 'text/html; charset=UTF-8')
+            @response.remove_header('Set-Cookie')
+            response_cache
+            response_set_content(IFRAME_HTML, true)
           end
-
+          response_send_header(true)
         end
+
       end
     end
   end

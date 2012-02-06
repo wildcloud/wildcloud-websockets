@@ -72,13 +72,13 @@ module Wildcloud
 
         @sockets[socket_id][:sockets][session_id] = socket
 
-        message, @deliveries[socket_id] = @deliveries[socket_id], []
-        publish(socket_id, message)
+        #message, @deliveries[socket_id] = @deliveries[socket_id], []
+        #publish(socket_id, message)
       end
 
       def remove_socket(socket_id, session_id, socket)
         return nil unless @sockets.key?(socket_id)
-        @sockets[socket_id][:sockets].delete(session_id)
+        @sockets[socket_id][:sockets].delete_if { |k,v| v == socket }
       end
 
       def publish(socket_id, message)

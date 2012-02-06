@@ -18,7 +18,7 @@ require 'rubygems'
 
 $: << File.expand_path('../../lib', __FILE__)
 
-require 'wildcloud/websockets/websockets/server'
+require 'wildcloud/websockets/server'
 
-@server = Wildcloud::Websockets::Websockets::Server.new
+@server = Wildcloud::Websockets::Server.new
 @server.start

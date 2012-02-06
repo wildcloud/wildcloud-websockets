@@ -14,17 +14,28 @@
 
 module Wildcloud
   module Websockets
-    module Websockets
-      module Handlers
-        module Publish
+    module Handler
+      class Eventsource < BaseHandler
 
-          def handle_publish(socket_id)
-            response_set_content('OK', true)
-            response_send_header(true)
-            Engine.instance.publish(socket_id, request_body)
-          end
+        def handle_get
+          set_headers 'Content-Type' => 'text/event-stream; charset=UTF-8'
+          set_no_cache
+          set_chunked
 
+          send_response
+
+          send_content("\r\n")
+          send_content("data: o\r\n\r\n")
+
+          on_new_connection
         end
+
+        def encode_message(message)
+          message = "data: #{message}\r\n\r\n"
+          puts "EventSource: encoding: #{message.inspect}"
+          message
+        end
+
       end
     end
   end

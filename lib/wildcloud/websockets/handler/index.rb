@@ -14,17 +14,16 @@
 
 module Wildcloud
   module Websockets
-    module Websockets
-      module Handlers
-        module Authorize
+    module Handler
+      class Index < BaseHandler
 
-          def handle_authorize(app_id, user_id)
-            socket_id = Engine.instance.authorize(app_id, user_id)
-            response_set_content(socket_id, true)
-            response_send_header(true)
-          end
-
+        def handle_get
+          set_headers 'Content-Type' => 'text/plain; charset=UTF-8'
+          remove_header('Set-Cookie')
+          set_content("Welcome to SockJS!\n", true)
+          send_response(true)
         end
+
       end
     end
   end

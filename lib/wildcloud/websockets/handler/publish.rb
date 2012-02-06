@@ -14,18 +14,15 @@
 
 module Wildcloud
   module Websockets
-    module Websockets
-      module Handlers
-        module Index
+    module Handler
+      class Publish < BaseHandler
 
-          def handle_index
-            @response.set_header('Content-Type', 'text/plain; charset=UTF-8')
-            @response.remove_header('Set-Cookie')
-            response_set_content("Welcome to SockJS!\n", true)
-            response_send_header(true)
-          end
-
+        def handle_publish(socket_id)
+          response_set_content('OK', true)
+          response_send_header(true)
+          Engine.instance.publish(socket_id, request_body)
         end
+
       end
     end
   end

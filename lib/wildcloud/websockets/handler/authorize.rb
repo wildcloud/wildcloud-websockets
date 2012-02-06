@@ -14,25 +14,15 @@
 
 module Wildcloud
   module Websockets
-    module Websockets
-      module Handlers
-        module Eventsource
+    module Handler
+      class Authorize < BaseHandler
 
-          def handle_eventsource(socket_id, server_id, session_id)
-            @response.set_header('Content-Type', 'text/event-stream; charset=UTF-8')
-            response_no_cache
-            response_send_header
-
-            response_send_content("\r\n")
-            response_send_content("data: o\r\n\r\n")
-
-            @type = :eventsource
-            @socket_id = socket_id
-            @session_id = session_id
-            on_new_connection(@socket_id, session_id, self)
-          end
-
+        def handle_authorize(app_id, user_id)
+          socket_id = Engine.instance.authorize(app_id, user_id)
+          response_set_content(socket_id, true)
+          response_send_header(true)
         end
+
       end
     end
   end
