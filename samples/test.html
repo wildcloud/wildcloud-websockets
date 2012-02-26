@@ -2,11 +2,10 @@
 <head>
     <title>Web Socket Test</title>
     <script src="http://cdn.sockjs.org/sockjs-0.2.min.js"></script>
-    <link rel="stylesheet" href="http://localhost:4000/authorize/app/client">
     <script>
         // ['websocket', 'xdr-streaming', 'xhr-streaming', 'iframe-eventsource', 'iframe-htmlfile', 'xdr-polling', 'xhr-polling', 'iframe-xhr-polling', 'jsonp-polling']
         // ['websocket', 'xhr-streaming', 'iframe-eventsource', 'iframe-htmlfile', 'xhr-polling', 'iframe-xhr-polling']
-        var sock = new SockJS('http://localhost:4000/appclient', null, {debug:true, devel:true, protocols_whitelist: ['websocket', 'xhr-streaming', 'iframe-eventsource', 'iframe-htmlfile', 'xhr-polling', 'iframe-xhr-polling']});
+        var sock = new SockJS('http://localhost:8081/1e16f7bc75de48ae2a156466a3d0521f525a3187', null, {debug:true, devel:true, protocols_whitelist: ['websocket', 'xhr-streaming', 'iframe-eventsource', 'iframe-htmlfile', 'xhr-polling', 'iframe-xhr-polling']});
         sock.onopen = function () {
             console.log('open');
         };

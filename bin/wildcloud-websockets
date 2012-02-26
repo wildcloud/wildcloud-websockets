@@ -15,10 +15,11 @@
 # limitations under the License.
 
 require 'rubygems'
+require 'bundler/setup'
 
 $: << File.expand_path('../../lib', __FILE__)
 
-require 'wildcloud/websockets/server'
+require 'wildcloud/websockets/engine'
 
-@server = Wildcloud::Websockets::Server.new
-@server.start
+Engine = Wildcloud::Websockets::Engine.new
+Engine.start

@@ -16,8 +16,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = '>= 1.3.6'
 
+  s.add_dependency 'json', '1.6.5'
   s.add_dependency 'hot_bunnies', '1.3.4'
   s.add_dependency 'multi_json', '1.0.4'
+  s.add_dependency 'httparty', '0.8.1'
+  s.add_dependency 'sinatra', '1.3.2'
 
   s.files        = Dir.glob('{bin,lib,ext}/**/*') + %w(LICENSE README.md CHANGELOG.md)
   s.executables  = %w(wildcloud-websockets)

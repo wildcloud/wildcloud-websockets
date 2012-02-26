@@ -15,7 +15,7 @@ The service does not **yet** implement the interface as described below.
 ## Interface
 
 Application authorizes client with _secret_ application id and custom client id. The service returns socket_id, that
-should be used for identifying that specific client (e.g. user of a web application).
+should be used for identifying that specific client (e.g. session of a user of a web application).
 
     POST /authorize/application_id/client_id
 
@@ -33,13 +33,9 @@ with content of the message as the request body with other parameters encoded as
 
 where session id represent single connection between the client and this service (e.g. one window or tab in a browser).
 
-To publish a message, the application posts a request to the service with socket_id and optional session_id
+To publish a message, the application posts a request to the service with socket_id
 
     POST /publish/socket_id
-
-or
-
-    POST /publish/socket_id/session_id
 
 with JSON encoded body containing the message and optional parameters.
 
@@ -89,6 +85,10 @@ On the client-side the user connects using SockJS to the server and specifies th
         * Safari
     * WP7 - not tested
         * Internet explorer mobile
+
+## Implementation
+
+* Uses [sockjs-netty](https://github.com/cgbystrom/sockjs-netty)
 
 ## License
 

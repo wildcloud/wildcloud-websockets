@@ -12,19 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'wildcloud/websockets/java'
-require 'wildcloud/websockets/handler'
-
 module Wildcloud
   module Websockets
 
     class Server
 
-      def initialize(address = '0.0.0.0', port = 8081)
+      def initialize(router, address, port)
+        @router = router
         @address = address
         @port = port
         @bootstrap = ServerBootstrap.new(NioServerSocketChannelFactory.new(Executors.newCachedThreadPool, Executors.newCachedThreadPool))
-        @bootstrap.pipeline_factory = PipelineFactory.new
+        @bootstrap.pipeline_factory = PipelineFactory.new(@router)
       end
 
       def start
@@ -34,49 +32,21 @@ module Wildcloud
 
     end
 
-    class Logger
-
-      include ChannelUpstreamHandler
-      include ChannelDownstreamHandler
-
-      def handleUpstream(context, event)
-        case event
-          when UpstreamMessageEvent
-            #$stderr.puts ">---"
-            #$stderr.puts event.message.to_string(Charset.for_name('UTF-8'))
-            #$stderr.puts "----"
-            #$stderr.puts event.message.array.join(',')
-            #$stderr.puts "----"
-        end
-        context.send_upstream(event)
-      end
-
-      def handleDownstream(context, event)
-        context.send_downstream(event)
-        case event
-          when DownstreamMessageEvent
-            #$stderr.puts "<---"
-            #$stderr.puts event.message.to_string(Charset.for_name('UTF-8'))
-            #$stderr.puts "----"
-            #$stderr.puts event.message.capacity
-            #$stderr.puts "----"
-            context.send_upstream(UpstreamMessageEvent.new(context.channel, event.message.capacity, event.remote_address)) if event.message.capacity > 0
-        end
-      end
-
-    end
-
     class PipelineFactory
 
       include ChannelPipelineFactory
 
+      def initialize(router)
+        @router = router
+      end
+
       def getPipeline
         pipeline = Channels.pipeline
-        pipeline.add_last('logging', Logger.new)
         pipeline.add_last('decoder', HttpRequestDecoder.new)
-        pipeline.add_last('aggregator', HttpChunkAggregator.new(65536))
+        pipeline.add_last('aggregator', HttpChunkAggregator.new(130 * 1024))
         pipeline.add_last('encoder', HttpResponseEncoder.new)
-        pipeline.add_last('handler', Connection.new)
+        pipeline.add_last('preflight', PreflightHandler.new)
+        pipeline.add_last('handler', @router)
         pipeline
       end
 
